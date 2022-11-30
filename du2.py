@@ -18,13 +18,21 @@ with open ("vstup_t.csv", encoding="utf-8", newline='') as f,\
             pass
 #print (a)
 #print (len (a))
+n=len (a)
+print (n)
+m=(n//7)+1
+print (m)
 y=7
 #cisla=[]
-cislo=0
-for z in range (y):
-    cislo+=float(a.pop (0))
-    #cisla.append (cislo)
-print (cislo/7)
+
+for v in range (m):
+    cislo=0
+    for z in range (y):
+        cislo+=float(a.pop (0))
+        #cisla.append (cislo)
+        #print (a)
+    print (cislo/7)
+
 
 print (f"Prumerny prutok je: {prutok/len(a)}")
 
