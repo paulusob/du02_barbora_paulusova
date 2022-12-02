@@ -46,7 +46,7 @@ for v in range (m):
 print (f"Prumerny prutok je: {prutok/len(a)}")
 
 
-with open ("vstup_t.csv", encoding="utf-8", newline='') as f,\
+with open ("vstup_t2.csv", encoding="utf-8", newline='') as f,\
     open ("vystup_7dni.csv","w",encoding="utf-8", newline='') as fout,\
     open ("vystup_rok.csv","w",encoding="utf-8", newline='') as fout:
     reader=csv.reader(f, delimiter=",")
@@ -61,38 +61,46 @@ with open ("vstup_t.csv", encoding="utf-8", newline='') as f,\
 
     #extrahovat datum a rok
     
-    rok=1980
+    rok=int(1980)
 
     a=[]
-    b=[]
+    
     i=0
     prutok=0
     cislo=0
-    i=1
+    i=0
     for row in reader:
-        
-        b.append (row)
         datum_n=(row[2])
-        rok_n=(datum_n[-4:])
-        prutok_den=(row[-1])
-        print (rok_n)
+        rok_no=(datum_n[-4:])
+        rok_n=int(rok_no)
+        #prutok_den=(row[-1])
+        #print (rok_n)
         if rok_n == rok:
-            a.append(row[-1])
-            cislo+=float(a.pop (0))
+            #a.append(row[-1])
+            cislo+=float(row[-1])
+            #(a.pop (0))
             datum=(row[2])
-            rok(datum[-4:])
+            rok_o=(datum[-4:])
+            rok = int(rok_o)
             i=i+1
+            #print (i)
         else:
+            #print(cislo)
+            #print(a)
             vysledek = cislo/i
             print (vysledek)
             print (row[0],row[1],row[2])
-            a.clear()
-            a.append(row[-1])
+            #a.clear()
+            #a.append(row[-1])
             datum=(row[2])
-            print (datum)
-            #rok(datum[-4:])
+            #print (datum)
+            rok_o=(datum[-4:])
+            rok = int(rok_o)
             cislo = 0
-    
+            i=0
+            cislo+=float(row[-1])
+    vysledek = cislo/i
+    print (vysledek)
         #rok=(datum[-4:])
         #print(datum)
         #print(rok)
