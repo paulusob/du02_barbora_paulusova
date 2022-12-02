@@ -1,4 +1,6 @@
 import csv
+
+#sedmidenní průměr
 with open ("vstup_t.csv", encoding="utf-8", newline='') as f,\
     open ("vystup_7dni.csv","w",encoding="utf-8", newline='') as fout,\
     open ("vystup_rok.csv","w",encoding="utf-8", newline='') as fout:
@@ -45,28 +47,30 @@ for v in range (m):
 
 print (f"Prumerny prutok je: {prutok/len(a)}")
 
-
-with open ("vstup_t2.csv", encoding="utf-8", newline='') as f,\
+#roční průměr 
+with open ("vstup.csv", encoding="utf-8", newline='') as f,\
     open ("vystup_7dni.csv","w",encoding="utf-8", newline='') as fout,\
     open ("vystup_rok.csv","w",encoding="utf-8", newline='') as fout:
     reader=csv.reader(f, delimiter=",")
     writer = csv.writer (fout)
     
-    #prvni_radek=f.readline(4)
+    #prvni_radek=f.readline()
     #print (prvni_radek)
+
+    rada=[]
+    rada=f.readline()
+
     #datum_zac=(prvni_radek[2])
     #rok_zac=(datum_zac[-4:])
     #print(datum_zac)
     #print (rok_zac)
 
-    #extrahovat datum a rok
     
-    rok=int(1980)
+    rok=int(1980) #nastavení počátečního roku - vyextrahovat z prvního řádku
 
-    a=[]
+    a=[] #vytvoření prázdného seznamu 
     
-    i=0
-    prutok=0
+    
     cislo=0
     i=0
     for row in reader:
@@ -88,8 +92,9 @@ with open ("vstup_t2.csv", encoding="utf-8", newline='') as f,\
             #print(cislo)
             #print(a)
             vysledek = cislo/i
-            print (vysledek)
-            print (row[0],row[1],row[2])
+            print (f"{rada} {vysledek} \n ")
+            rada = (row[0],row[1],row[2])
+            #print (row[0],row[1],row[2])
             #a.clear()
             #a.append(row[-1])
             datum=(row[2])
@@ -99,8 +104,9 @@ with open ("vstup_t2.csv", encoding="utf-8", newline='') as f,\
             cislo = 0
             i=0
             cislo+=float(row[-1])
+    
     vysledek = cislo/i
-    print (vysledek)
+    print (f"{rada} {vysledek} \n ")
         #rok=(datum[-4:])
         #print(datum)
         #print(rok)
