@@ -61,9 +61,9 @@ with open ("vystup_7dni.csv","w",encoding="utf-8", newline='') as fout:
     rada=(radek[0],radek[1],radek[2])
     print (rada)
     i=0
+    cislo=0
     while n>0:
         try:
-            cislo=0
             cislo+=float(a.pop (0))
             #print (rada, cislo/7)
             #print(b)
@@ -71,6 +71,8 @@ with open ("vystup_7dni.csv","w",encoding="utf-8", newline='') as fout:
             n=int(len (a))
             print(n)
             i=i+1
+            #print(i)
+            print (cislo)
         except ValueError:
             continue
 
