@@ -10,6 +10,7 @@ with open ("vstup.csv", encoding="utf-8", newline='') as f,\
 
     rada=[]
     rada = f.readline()
+    print(rada)
 
     #datum_zac=(prvni_radek[2])
     #rok_zac=(datum_zac[-4:])
@@ -21,7 +22,7 @@ with open ("vstup.csv", encoding="utf-8", newline='') as f,\
     #print(prvni_rok)
     #print(rok)
 
-    writer.writerow(prvni_rok)
+    #writer.writerow(prvni_rok)
 
 
      #nastavení počátečního roku - vyextrahovat z prvního řádku
@@ -34,6 +35,7 @@ with open ("vstup.csv", encoding="utf-8", newline='') as f,\
 
 
     for row in reader:
+        #print(row)
         datum_n=(row[2])
         rok_no=(datum_n[-4:])
         rok_n=int(rok_no)
@@ -53,11 +55,11 @@ with open ("vstup.csv", encoding="utf-8", newline='') as f,\
             #print(a)
             vysledek = cislo/i
             outrow = [rada,vysledek]
-            print(vysledek)
+            #print(vysledek)
             #print(outrow)
             #print (f"{rada} {vysledek} \n ")
             writer.writerow(outrow)
-            rada = (row[0],row[1],row[2])
+            rada = row[:3]
             #print (row[0],row[1],row[2])
             #a.clear()
             #a.append(row[-1])
