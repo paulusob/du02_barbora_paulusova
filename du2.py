@@ -1,5 +1,6 @@
 import csv
 
+
 # výpočet sedmidenního průtoku
 # načtení souboru a uložení potřebných údajů do seznamů 
 
@@ -47,7 +48,8 @@ with open ("vystup_7dni.csv","w",encoding="utf-8", newline='') as fout:
             radek=radky.pop (0)
         
         # vypsání výsledku do souboru 
-        outrow = [rada [0],rada [1],rada [2],round (cislo/7, 4)]
+        
+        outrow = [rada [0],rada [1],rada [2],'%.4f' % (cislo/7)]
         writer.writerow(outrow)
         n=int(len (prutoky))
     
@@ -73,7 +75,7 @@ with open ("vystup_7dni.csv","w",encoding="utf-8", newline='') as fout:
             
 
     # průměrný průtok posledních dní se vypočítá v proměnné outrow a zapíše se do souboru 
-    outrow = [rada [0],rada [1],rada [2],round (cislo/7, 4)]
+    outrow = [rada [0],rada [1],rada [2],'%.4f' % (cislo/7)]
     writer.writerow(outrow)
     
 
@@ -111,7 +113,7 @@ with open ("vstup.csv", encoding="utf-8", newline='') as f:
     
 # definice proměnných 
 cislo=0
-i=0
+i=1
 vysledky = []
 rada = []
 
@@ -161,7 +163,7 @@ with open ("vstup.csv", encoding="utf-8", newline='') as f,\
 
             # vynulování hodnoty proměnných 'i' a 'cislo' a načtení průtoku do proměnné 'cislo'
             cislo = 0
-            i=0
+            i=1
             cislo+=float(row[-1])
     
     # vypočtení průměru pro poslední rok a uložení do seznamu 
@@ -169,16 +171,18 @@ with open ("vstup.csv", encoding="utf-8", newline='') as f,\
     vysledek = cislo/i
     vysledky.append (vysledek)
 
+    # vypisování výsledků do výstupního souboru
+
     # odebrání hodnoty průměrného průtoku prvního roku seznamu 
     prvni_vysledek = vysledky.pop(0)
     # vypsání první řady seznamu a průtoku prvního roku seznamu do souboru 
-    outrow=(prvni_rada [0],prvni_rada [1],prvni_rada [2], round (prvni_vysledek,4))
+    outrow=(prvni_rada [0],prvni_rada [1],prvni_rada [2], '%.4f' % (prvni_vysledek))
     writer.writerow(outrow)
     
-    # vypsání ostatních řad a ročních průtoků do seznamu (dokud budou hodnoty v seznamu vysledky)
+    # vypsání ostatních řad a ročních průtoků do souboru (dokud budou hodnoty v seznamu vysledky)
     while len(vysledky)>0:
         dalsi_vysledek = vysledky.pop (0)
         dalsi_radek = rada.pop (0)
-        outrow=(dalsi_radek[0],dalsi_radek[1],dalsi_radek[2],round (dalsi_vysledek,4))
+        outrow=(dalsi_radek[0],dalsi_radek[1],dalsi_radek[2],'%.4f' % (dalsi_vysledek))
         writer.writerow(outrow)
 
