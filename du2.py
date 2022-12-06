@@ -1,5 +1,28 @@
 import csv
+import sys
 
+def pridat_prutok (a):
+    a+=float(row[-1])
+    return a
+
+
+def zapis_vystup (vstupni_radek, kumul_prutok):
+    vystup= [vstupni_radek [0],vstupni_radek [1],vstupni_radek [2],'%.4f' % (kumul_prutok/7)]
+    writer.writerow(vystup)
+    return vystup
+
+def podminky_vstupu (akt_prutok):
+    if len(row) != 4:
+        print ("Vstup není v požadovaném formátu, program očekává data ve 4 sloupcích:\
+        databázové číslo, označení typu dat, datum, průměrný denní průtok")
+        sys.exit()
+    try:
+        akt_prutok=float(row[-1])
+    except ValueError:
+        print ("Průtok není číselná hodnota, zkontrolujte hodnoty průtoku ve čtvrtém sloupci")
+        sys.exit ()
+    return akt_prutok
+    
 
 # výpočet sedmidenního průtoku
 # načtení souboru a uložení potřebných údajů do seznamů 
@@ -14,14 +37,16 @@ with open ("vstup.csv", encoding="utf-8", newline='') as f: #,\
     radky=[]
     prutok=0
 
-    # uložení řádky a průtoku do proměnné
+    # uložení řádky a průtoku do proměnné a ověření korektnosti vstupu - 
+    # v případě jiného počtu sloupců a nepřítomnosti čéselné hodnoty průtoku se program ukončí 
     for row in reader:
+        podminky_vstupu(prutok)
+            
         prutoky.append(row[-1])
         radky.append(row)
-        try:
-            prutok+= float(row[-1])
-        except ValueError:
-            pass
+        
+
+        
     
 # definice 'n' (počet hodnot průtoků v seznamu) a 'y' (definice počtu iterací)
 n=int(len(prutoky))
@@ -36,21 +61,25 @@ with open ("vystup_7dni.csv","w",encoding="utf-8", newline='') as fout:
         cislo=0
 
         # extrakce prvního dne ze sedmi dnů, pro které je počítán průměr
+        
+        #parametry_radku(radky, radek)
+        #rada = vystup
         radek=radky.pop (0)
         rada=(radek[0],radek[1],radek[2])
         
         # načítání jednotlivých průtoků do proměnné číslo
         for z in range (y):
             cislo+=float(prutoky.pop(0))
+                
         
         # odebrání nepotřebných řádků 
         for u in range (6):
             radek=radky.pop (0)
         
         # vypsání výsledku do souboru 
+    
+        zapis_vystup (rada,cislo)
         
-        outrow = [rada [0],rada [1],rada [2],'%.4f' % (cislo/7)]
-        writer.writerow(outrow)
         n=int(len (prutoky))
     
     # pokud je počet hodnot průtoku v seznamu menší než 7, počítá se průměr z těchto zbylých hodnot 
@@ -75,9 +104,9 @@ with open ("vystup_7dni.csv","w",encoding="utf-8", newline='') as fout:
             
 
     # průměrný průtok posledních dní se vypočítá v proměnné outrow a zapíše se do souboru 
-    outrow = [rada [0],rada [1],rada [2],'%.4f' % (cislo/7)]
-    writer.writerow(outrow)
+    zapis_vystup (rada,cislo)
     
+print ("Výsledné sedmidenní průtoky jsou uloženy v souboru vystup_7dni.csv")    
 
 
 
@@ -92,8 +121,10 @@ with open ("vstup.csv", encoding="utf-8", newline='') as f:
     roky=[]
     radky=[]
 
-    # vyextrahování řádků a roků a načtení do seznamů radky a roky 
+    # Ověření korektnosti vstupu, vyextrahování řádků a roků a načtení do seznamů radky a roky
     for row in reader: 
+        podminky_vstupu (prutok)
+
         radek=(row[:3])
         radky.append (radek) 
 
@@ -185,4 +216,4 @@ with open ("vstup.csv", encoding="utf-8", newline='') as f,\
         dalsi_radek = rada.pop (0)
         outrow=(dalsi_radek[0],dalsi_radek[1],dalsi_radek[2],'%.4f' % (dalsi_vysledek))
         writer.writerow(outrow)
-
+print ("Výsledné roční průtoky jsou uloženy v souboru vystup_rok.csv") 
