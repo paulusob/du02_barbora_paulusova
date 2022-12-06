@@ -1,13 +1,10 @@
 import csv
 import sys
 
-def pridat_prutok (a):
-    a+=float(row[-1])
-    return a
+#definice funkcí 
 
-
-def zapis_vystup (vstupni_radek, kumul_prutok):
-    vystup= [vstupni_radek [0],vstupni_radek [1],vstupni_radek [2],'%.4f' % (kumul_prutok/7)]
+def zapis_vystup (vstupni_radek, vysl_prutok):
+    vystup= [vstupni_radek [0],vstupni_radek [1],vstupni_radek [2],'%.4f' % (vysl_prutok)]
     writer.writerow(vystup)
     return vystup
 
@@ -62,8 +59,7 @@ with open ("vystup_7dni.csv","w",encoding="utf-8", newline='') as fout:
 
         # extrakce prvního dne ze sedmi dnů, pro které je počítán průměr
         
-        #parametry_radku(radky, radek)
-        #rada = vystup
+    
         radek=radky.pop (0)
         rada=(radek[0],radek[1],radek[2])
         
@@ -77,8 +73,8 @@ with open ("vystup_7dni.csv","w",encoding="utf-8", newline='') as fout:
             radek=radky.pop (0)
         
         # vypsání výsledku do souboru 
-    
-        zapis_vystup (rada,cislo)
+        vysledek=cislo/7
+        zapis_vystup (rada,vysledek)
         
         n=int(len (prutoky))
     
@@ -104,10 +100,10 @@ with open ("vystup_7dni.csv","w",encoding="utf-8", newline='') as fout:
             
 
     # průměrný průtok posledních dní se vypočítá v proměnné outrow a zapíše se do souboru 
-    zapis_vystup (rada,cislo)
+    vysledek=cislo/7
+    zapis_vystup (rada,vysledek)
     
 print ("Výsledné sedmidenní průtoky jsou uloženy v souboru vystup_7dni.csv")    
-
 
 
 # výpočet průměrného ročního průtoku 
@@ -161,8 +157,8 @@ with open ("vstup.csv", encoding="utf-8", newline='') as f,\
         
         # extrakce roku ze řádku 
         datum_n=(row[2])
-        rok_no=(datum_n[-4:])
-        rok_n=int(rok_no)
+        rok_n=(datum_n[-4:])
+        rok_n=int(rok_n)
         
         # porovnání roku současného řádku s rokem řádku minulého 
         if rok_n == rok:
@@ -172,8 +168,8 @@ with open ("vstup.csv", encoding="utf-8", newline='') as f,\
            
             # aktualizace proměnné rok a proměnné i, která vyjadřuje počet iterací 
             datum=(row[2])
-            rok_o=(datum[-4:])
-            rok = int(rok_o)
+            rok=(datum[-4:])
+            rok=int(rok)
             i=i+1
             
         # v případě, že se hodnota nového roku liší od hodnoty předchozího roku, vezme se součet průtoků z minulého roku
@@ -207,13 +203,11 @@ with open ("vstup.csv", encoding="utf-8", newline='') as f,\
     # odebrání hodnoty průměrného průtoku prvního roku seznamu 
     prvni_vysledek = vysledky.pop(0)
     # vypsání první řady seznamu a průtoku prvního roku seznamu do souboru 
-    outrow=(prvni_rada [0],prvni_rada [1],prvni_rada [2], '%.4f' % (prvni_vysledek))
-    writer.writerow(outrow)
+    zapis_vystup(prvni_rada,prvni_vysledek)
     
     # vypsání ostatních řad a ročních průtoků do souboru (dokud budou hodnoty v seznamu vysledky)
     while len(vysledky)>0:
         dalsi_vysledek = vysledky.pop (0)
         dalsi_radek = rada.pop (0)
-        outrow=(dalsi_radek[0],dalsi_radek[1],dalsi_radek[2],'%.4f' % (dalsi_vysledek))
-        writer.writerow(outrow)
+        zapis_vystup(dalsi_radek,dalsi_vysledek)
 print ("Výsledné roční průtoky jsou uloženy v souboru vystup_rok.csv") 
