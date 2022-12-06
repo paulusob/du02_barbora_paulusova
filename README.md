@@ -4,7 +4,7 @@ Program slouží k výpočtu sedmidenního a ročního průtoku z denních dat. 
 
 ## Výpočet průměrného sedmidenního průtoku 
 
-**Načtení souboru**
+**Načtení souboru**\
 Pomocí příkazu *with open* program načte vstupní soubor dat *vstup.csv*, který by měl být ve formátu csv a v jednotlivých řádcích by měl obsahovat *databázové číslo, označení typu dat, datum, průměrný denní průtok* pro každý měřený den. 
 
 **Vytvoření seznamů**
