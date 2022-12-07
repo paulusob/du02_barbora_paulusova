@@ -20,27 +20,39 @@ def podminky_vstupu (akt_prutok):
         sys.exit ()
     return akt_prutok
     
+def extr_rok (f_row):
+    datum_f=(f_row[2])
+    rok_f=(datum_f[-4:])
+    vystup_rok=int(rok_f)
+    return vystup_rok
+
+
 
 # výpočet sedmidenního průtoku
 # načtení souboru a uložení potřebných údajů do seznamů 
 
 # otevření souboru pro čtení 
-with open ("vstup.csv", encoding="utf-8", newline='') as f: #,\
-    
-    reader=csv.reader(f, delimiter=",")
-    
-    # vytvoření prázdných seznamů 'a' a 'b', definice proměnné průtok
-    prutoky=[]
-    radky=[]
-    prutok=0
+try:
+    with open ("vstup.csv", encoding="utf-8", newline='') as f: #,\
+        
+        reader=csv.reader(f, delimiter=",")
+        
+        # vytvoření prázdných seznamů 'a' a 'b', definice proměnné průtok
+        prutoky=[]
+        radky=[]
+        prutok=0
 
-    # uložení řádky a průtoku do proměnné a ověření korektnosti vstupu - 
-    # v případě jiného počtu sloupců a nepřítomnosti čéselné hodnoty průtoku se program ukončí 
-    for row in reader:
-        podminky_vstupu(prutok)
-            
-        prutoky.append(row[-1])
-        radky.append(row)
+        # uložení řádky a průtoku do proměnné a ověření korektnosti vstupu - 
+        # v případě jiného počtu sloupců a nepřítomnosti čéselné hodnoty průtoku se program ukončí 
+        for row in reader:
+            podminky_vstupu(prutok)
+                
+            prutoky.append(row[-1])
+            radky.append(row)
+except FileNotFoundError:
+    print ('Vstupní soubor nebyl nalezen')
+
+
         
 
         
@@ -50,6 +62,7 @@ n=int(len(prutoky))
 y=7 
 
 # otevření souboru pro zápis 
+
 with open ("vystup_7dni.csv","w",encoding="utf-8", newline='') as fout:
     writer = csv.writer (fout)
     
@@ -154,12 +167,9 @@ with open ("vstup.csv", encoding="utf-8", newline='') as f,\
    # výpočet průměru 
     
     for row in reader:
-        
-        # extrakce roku ze řádku 
-        datum_n=(row[2])
-        rok_n=(datum_n[-4:])
-        rok_n=int(rok_n)
-        
+
+        rok_n = extr_rok(row)
+                
         # porovnání roku současného řádku s rokem řádku minulého 
         if rok_n == rok:
             
@@ -167,9 +177,7 @@ with open ("vstup.csv", encoding="utf-8", newline='') as f,\
             cislo+=float(row[-1])
            
             # aktualizace proměnné rok a proměnné i, která vyjadřuje počet iterací 
-            datum=(row[2])
-            rok=(datum[-4:])
-            rok=int(rok)
+            rok = extr_rok(row)
             i=i+1
             
         # v případě, že se hodnota nového roku liší od hodnoty předchozího roku, vezme se součet průtoků z minulého roku
