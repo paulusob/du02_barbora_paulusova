@@ -43,7 +43,7 @@ Do seznamu *rada* se uloží první řádek s jinou hodnotou roku - tedy první 
 Tento proces se opakuje a v posledním kroku je do seznamu zapsán i průměrný průtok posledního roku (mimo cyklus).
 
 **Výpis výsledků**\
-Jednotlivé počáteční řádky i výsledky se postupně odebírají ze seznamů *rada* a *vysledky* a ukládají se do výstupního souboru vystup_rok. 
+Jednotlivé počáteční řádky i výsledky se postupně odebírají ze seznamů *rada* a *vysledky* a ukládají se do výstupního souboru *vystup_rok*. 
 Pro první rok je tato operace provedena samostatně, neboť se první řádek nevypisuje v cyklu. 
 
 
