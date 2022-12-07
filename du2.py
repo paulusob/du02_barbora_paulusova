@@ -27,11 +27,10 @@ def extr_rok (f_row):
     return vystup_rok
 
 
-
 # výpočet sedmidenního průtoku
 # načtení souboru a uložení potřebných údajů do seznamů 
 
-# otevření souboru pro čtení 
+# otevření souboru pro čtení, ošetření nenalezení souboru
 try:
     with open ("vstup.csv", encoding="utf-8", newline='') as f: #,\
         
@@ -50,13 +49,10 @@ try:
             prutoky.append(row[-1])
             radky.append(row)
 except FileNotFoundError:
-    print ('Vstupní soubor nebyl nalezen')
+    print ('Vstupní soubor nebyl nalezen, zkontrolujte název a umístění souboru')
+    sys.exit()
 
 
-        
-
-        
-    
 # definice 'n' (počet hodnot průtoků v seznamu) a 'y' (definice počtu iterací)
 n=int(len(prutoky))
 y=7 
@@ -71,8 +67,6 @@ with open ("vystup_7dni.csv","w",encoding="utf-8", newline='') as fout:
         cislo=0
 
         # extrakce prvního dne ze sedmi dnů, pro které je počítán průměr
-        
-    
         radek=radky.pop (0)
         rada=(radek[0],radek[1],radek[2])
         
@@ -80,7 +74,6 @@ with open ("vystup_7dni.csv","w",encoding="utf-8", newline='') as fout:
         for z in range (y):
             cislo+=float(prutoky.pop(0))
                 
-        
         # odebrání nepotřebných řádků 
         for u in range (6):
             radek=radky.pop (0)
@@ -98,7 +91,6 @@ with open ("vystup_7dni.csv","w",encoding="utf-8", newline='') as fout:
         radek = radky.pop (0)
         rada=(radek[0],radek[1],radek[2])
 
-    
     # definice proměnné i, která udává počet provedených iterací 
         i=0
         cislo=0
@@ -111,7 +103,6 @@ with open ("vystup_7dni.csv","w",encoding="utf-8", newline='') as fout:
     except IndexError:
         pass
             
-
     # průměrný průtok posledních dní se vypočítá v proměnné outrow a zapíše se do souboru 
     vysledek=cislo/7
     zapis_vystup (rada,vysledek)
@@ -121,34 +112,36 @@ print ("Výsledné sedmidenní průtoky jsou uloženy v souboru vystup_7dni.csv"
 
 # výpočet průměrného ročního průtoku 
 
-# otevření souboru s daty pro čtení 
-with open ("vstup.csv", encoding="utf-8", newline='') as f:
-    
-    reader=csv.reader(f, delimiter=",")
-    
-    # vytvoření seznamů pro uložení roků a řádků
-    roky=[]
-    radky=[]
-
-    # Ověření korektnosti vstupu, vyextrahování řádků a roků a načtení do seznamů radky a roky
-    for row in reader: 
-        podminky_vstupu (prutok)
-
-        radek=(row[:3])
-        radky.append (radek) 
-
-        datum_m=(row[2])
-        roky.append (int(datum_m[-4:]))
+# otevření souboru s daty pro čtení, ošetření nenalezení souboru
+try:
+    with open ("vstup.csv", encoding="utf-8", newline='') as f:
+        reader=csv.reader(f, delimiter=",")
         
-    # odebrání prvního roku a převedení do proměnné rok 
-    prvni_rok = roky.pop(0)
-    rok=int(prvni_rok)
-    
-    # odebrání prvního řádku a uložení prvních tří atributů do proměnné prvni rada
-    prvni_radek=[]
-    prvni_radek = radky.pop(0)
-    prvni_rada = prvni_radek [:3]
-    
+        # vytvoření seznamů pro uložení roků a řádků
+        roky=[]
+        radky=[]
+
+        # Ověření korektnosti vstupu, vyextrahování řádků a roků a načtení do seznamů radky a roky
+        for row in reader: 
+            podminky_vstupu (prutok)
+
+            radek=(row[:3])
+            radky.append (radek) 
+
+            datum_m=(row[2])
+            roky.append (int(datum_m[-4:]))
+            
+        # odebrání prvního roku a převedení do proměnné rok 
+        prvni_rok = roky.pop(0)
+        rok=int(prvni_rok)
+        
+        # odebrání prvního řádku a uložení prvních tří atributů do proměnné prvni rada
+        prvni_radek=[]
+        prvni_radek = radky.pop(0)
+        prvni_rada = prvni_radek [:3] 
+except FileNotFoundError:
+    print ('Vstupní soubor nebyl nalezen, zkontrolujte název a umístění souboru')
+    sys.exit()
 # zavření souboru - uložený je pouze první řádek a počáteční rok 
     
 # definice proměnných 
