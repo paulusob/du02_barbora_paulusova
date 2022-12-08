@@ -6,24 +6,27 @@ import sys
 def zapis_vystup (vstupni_radek, vysl_prutok):
     vystup= [vstupni_radek [0],vstupni_radek [1],vstupni_radek [2], "{:.4f}".format(vysl_prutok)]
     writer.writerow(vystup)
-    return vystup
 
 def podminky_vstupu (akt_prutok):
     if len(row) != 4:
         print ("Vstup není v požadovaném formátu, program očekává data ve 4 sloupcích:\
         databázové číslo, označení typu dat, datum, průměrný denní průtok")
+        print (f, "K chybě došlo na řádku {row}")
         sys.exit()
     try:
         akt_prutok=float(row[-1])
     except ValueError:
-        print ("Průtok není číselná hodnota, zkontrolujte hodnoty průtoku ve čtvrtém sloupci")
+        print (f, "Průtok na řádku {row} není číselná hodnota, zkontrolujte hodnoty průtoku ve čtvrtém sloupci")
         sys.exit ()
     return akt_prutok
     
 def extr_rok (f_row):
-    datum_f=(f_row[2])
-    rok_f=(datum_f[-4:])
-    vystup_rok=int(rok_f)
+    try:
+        datum_f=f_row[2]
+        vystup_rok=int(datum_f.split('.')[2])
+    except ValueError:
+         print (f, "Rok na řádku {row} není číselná hodnota, zkontrolujte datum")
+         sys.exit()
     return vystup_rok
 
 
