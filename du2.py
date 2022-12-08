@@ -4,7 +4,7 @@ import sys
 #definice funkcí 
 
 def zapis_vystup (vstupni_radek, vysl_prutok):
-    vystup= [vstupni_radek [0],vstupni_radek [1],vstupni_radek [2],'%.4f' % (vysl_prutok)]
+    vystup= [vstupni_radek [0],vstupni_radek [1],vstupni_radek [2], "{:.4f}".format(vysl_prutok)]
     writer.writerow(vystup)
     return vystup
 
