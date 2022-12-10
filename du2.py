@@ -7,16 +7,16 @@ def zapis_vystup (vstupni_radek, vysl_prutok):
     vystup= [vstupni_radek [0],vstupni_radek [1],vstupni_radek [2], "{:.4f}".format(vysl_prutok)]
     writer.writerow(vystup)
 
-def podminky_vstupu (akt_prutok):
-    if len(row) != 4:
+def podminky_vstupu (f_row):
+    if len(f_row) != 4:
         print ("Vstup není v požadovaném formátu, program očekává data ve 4 sloupcích:\
         databázové číslo, označení typu dat, datum, průměrný denní průtok")
-        print (f, "K chybě došlo na řádku {row}")
+        print (f, "K chybě došlo na řádku {f_row}")
         sys.exit()
     try:
-        akt_prutok=float(row[-1])
+        akt_prutok=float(f_row[-1])
     except ValueError:
-        print (f, "Průtok na řádku {row} není číselná hodnota, zkontrolujte hodnoty průtoku ve čtvrtém sloupci")
+        print (f, "Průtok na řádku {f_row} není číselná hodnota, zkontrolujte hodnoty průtoku ve čtvrtém sloupci")
         sys.exit ()
     return akt_prutok
     
@@ -25,7 +25,7 @@ def extr_rok (f_row):
         datum_f=f_row[2]
         vystup_rok=int(datum_f.split('.')[2])
     except ValueError:
-         print (f, "Rok na řádku {row} není číselná hodnota, zkontrolujte datum")
+         print (f, "Rok na řádku {f_row} není číselná hodnota, zkontrolujte datum")
          sys.exit()
     return vystup_rok
 
@@ -47,12 +47,18 @@ try:
         # uložení řádky a průtoku do proměnné a ověření korektnosti vstupu - 
         # v případě jiného počtu sloupců a nepřítomnosti čéselné hodnoty průtoku se program ukončí 
         for row in reader:
-            podminky_vstupu(prutok)
-                
-            prutoky.append(row[-1])
+            prutok=podminky_vstupu(row)
+    
+            prutoky.append(prutok)
+            
             radky.append(row)
+            
+        #print (max(prutoky))
 except FileNotFoundError:
     print ('Vstupní soubor nebyl nalezen, zkontrolujte název a umístění souboru')
+    sys.exit()
+except PermissionError:
+    print ('K otevření souboru nejsou přístupová práva')
     sys.exit()
 
 
@@ -61,53 +67,55 @@ n=int(len(prutoky))
 delka_bloku=7 
 
 # otevření souboru pro zápis 
-
-with open ("vystup_7dni.csv","w",encoding="utf-8", newline='') as fout:
-    writer = csv.writer (fout)
-    
-    # dokud je počet prvků v seznamu 7 a více, provádí se výpočet sedmidenního průměru průtoku 
-    while n >=delka_bloku:
-        kumul_prutok=0
-
-        # extrakce prvního dne ze sedmi dnů, pro které je počítán průměr
-        radek=radky.pop (0)
-
+try:
+    with open ("vystup_7dni.csv","w",encoding="utf-8", newline='') as fout:
+        writer = csv.writer (fout)
         
-        # načítání jednotlivých průtoků do proměnné kumul_prutok (kumulativní průtok)
-        for z in range (delka_bloku):
-            kumul_prutok+=float(prutoky.pop(0))
-                
-        # odebrání nepotřebných řádků 
-        for u in range (delka_bloku-1):
-            radky.pop (0)
-        
-        # vypsání výsledku do souboru 
-        vysledek=kumul_prutok/delka_bloku
-        zapis_vystup (radek,vysledek)
-        
-        n=int(len (prutoky))
-    
-    # pokud je počet hodnot průtoku v seznamu menší než 7, počítá se průměr z těchto zbylých hodnot 
-    
-    # extrakce prvního dne 
-    if len(radky)>0:
-        radek = radky.pop (0)
+        # dokud je počet prvků v seznamu 7 a více, provádí se výpočet sedmidenního průměru průtoku 
+        while n >=delka_bloku:
+            kumul_prutok=0
 
-    # definice proměnné i, která udává počet provedených iterací 
-        i=0
-        kumul_prutok=0
-
-    # dokud není seznam prázdný, budou se průtoky připočítávat do proměnné kumul_prutok, následně se vydělí počtem hodnot (počet iterací)
-        while n>0:
-            kumul_prutok+=float(prutoky.pop (0))
-            n=int(len (prutoky))
-            i=i+1
+            # extrakce prvního dne ze sedmi dnů, pro které je počítán průměr
+            radek=radky.pop (0)
 
             
-    # průměrný průtok posledních dní se vypočítá v proměnné outrow a zapíše se do souboru 
-        vysledek=kumul_prutok/i
-        zapis_vystup (radek,vysledek)
-    
+            # načítání jednotlivých průtoků do proměnné kumul_prutok (kumulativní průtok)
+            for z in range (delka_bloku):
+                kumul_prutok+=float(prutoky.pop(0))
+                    
+            # odebrání nepotřebných řádků 
+            for u in range (delka_bloku-1):
+                radky.pop (0)
+            
+            # vypsání výsledku do souboru 
+            vysledek=kumul_prutok/delka_bloku
+            zapis_vystup (radek,vysledek)
+            
+            n=int(len (prutoky))
+        
+        # pokud je počet hodnot průtoku v seznamu menší než 7, počítá se průměr z těchto zbylých hodnot 
+        
+        # extrakce prvního dne 
+        if len(radky)>0:
+            radek = radky.pop (0)
+
+        # definice proměnné i, která udává počet provedených iterací 
+            i=0
+            kumul_prutok=0
+
+        # dokud není seznam prázdný, budou se průtoky připočítávat do proměnné kumul_prutok, následně se vydělí počtem hodnot (počet iterací)
+            while n>0:
+                kumul_prutok+=float(prutoky.pop (0))
+                n=int(len (prutoky))
+                i=i+1
+
+                
+        # průměrný průtok posledních dní se vypočítá v proměnné outrow a zapíše se do souboru 
+            vysledek=kumul_prutok/i
+            zapis_vystup (radek,vysledek)
+except PermissionError:
+    print ('K vytvoření souboru nejsou přístupová práva')
+    sys.exit()
 print ("Výsledné sedmidenní průtoky jsou uloženy v souboru vystup_7dni.csv")    
 
 
@@ -124,18 +132,19 @@ try:
 
         # Ověření korektnosti vstupu, vyextrahování řádků a roků a načtení do seznamů radky a roky
         for row in reader: 
-            podminky_vstupu (prutok)
+            prutok=podminky_vstupu (row)
 
             radek=(row)
             radky.append (radek) 
 
             datum_m=(row[2])
             roky.append (int(datum_m[-4:]))
-            
-        
-        
+          
 except FileNotFoundError:
     print ('Vstupní soubor nebyl nalezen, zkontrolujte název a umístění souboru')
+    sys.exit()
+except PermissionError:
+    print ('K otevření souboru nejsou přístupová práva')
     sys.exit()
 # zavření souboru - uložený je pouze první řádek a počáteční rok 
 
@@ -154,64 +163,69 @@ vysledky = []
 radky = []
 
 # otevření vstupního souboru pro čtení a výstupního souboru pro zápis 
-with open ("vstup.csv", encoding="utf-8", newline='') as f,\
-    open ("vystup_rok.csv","w",encoding="utf-8", newline='') as fout:
-    
-    reader=csv.reader(f, delimiter=",")
-    writer = csv.writer (fout)
-    
-   # výpočet průměru 
-    
-    for row in reader:
+try:
+    with open ("vstup.csv", encoding="utf-8", newline='') as f,\
+        open ("vystup_rok.csv","w",encoding="utf-8", newline='') as fout:
+        
+        reader=csv.reader(f, delimiter=",")
+        writer = csv.writer (fout)
+        
+    # výpočet průměru 
+        
+        for row in reader:
 
-        rok_n = extr_rok(row)
+            rok_n = extr_rok(row)
+            prutok_n = float(row[-1])
+            # porovnání roku současného řádku s rokem řádku minulého 
+            if rok_n == rok:
                 
-        # porovnání roku současného řádku s rokem řádku minulého 
-        if rok_n == rok:
-            
-            # připočtení hodnoty průtoku 
-            kumul_prutok+=float(row[-1])
-           
-            # aktualizace proměnné rok a proměnné i, která vyjadřuje počet iterací 
-            rok = extr_rok(row)
-            i=i+1
-            
-        # v případě, že se hodnota nového roku liší od hodnoty předchozího roku, vezme se součet průtoků z minulého roku
-        # a vydělí se počtem iterací (počet dní v daném roce)
+                # připočtení hodnoty průtoku 
+                kumul_prutok+=float(row[-1])
+                
+                # aktualizace proměnné rok a proměnné i, která vyjadřuje počet iterací 
+                rok = extr_rok(row)
+                i=i+1
+                
 
-        else:
-            # výsledek ročního průměru se uloží do seznamu vysledky
-            vysledek = kumul_prutok/i
-            vysledky.append (vysledek)
-            
-            # do seznamu 'rada' se uloží počáteční řada roku, pro který se bude nyní počítat průměr
-            radky.append (row)
-            datum=(row[2])
-            
-            # aktualizace roku
-            rok_o=(datum[-4:])
-            rok = int(rok_o)
+            # v případě, že se hodnota nového roku liší od hodnoty předchozího roku, vezme se součet průtoků z minulého roku
+            # a vydělí se počtem iterací (počet dní v daném roce)
 
-            # vynulování hodnoty proměnných 'i' a 'cislo' a načtení průtoku do proměnné 'cislo'
-            kumul_prutok = 0
-            i=1
-            kumul_prutok+=float(row[-1])
-    
-    # vypočtení průměru pro poslední rok a uložení do seznamu 
-    i=i+1
-    vysledek = kumul_prutok/i
-    vysledky.append (vysledek)
+            else:
+                # výsledek ročního průměru se uloží do seznamu vysledky
+                vysledek = kumul_prutok/i
+                vysledky.append (vysledek)
+                
+                # do seznamu 'rada' se uloží počáteční řada roku, pro který se bude nyní počítat průměr
+                radky.append (row)
+                datum=(row[2])
+                
+                # aktualizace roku
+                rok_o=(datum[-4:])
+                rok = int(rok_o)
 
-    # vypisování výsledků do výstupního souboru
+                # vynulování hodnoty proměnných 'i' a 'cislo' a načtení průtoku do proměnné 'cislo'
+                kumul_prutok = 0
+                i=1
+                kumul_prutok+=float(row[-1])
+        
+        # vypočtení průměru pro poslední rok a uložení do seznamu 
+        i=i+1
+        vysledek = kumul_prutok/i
+        vysledky.append (vysledek)
 
-    # odebrání hodnoty průměrného průtoku prvního roku seznamu 
-    prvni_vysledek = vysledky.pop(0)
-    # vypsání první řady seznamu a průtoku prvního roku seznamu do souboru 
-    zapis_vystup(prvni_rada,prvni_vysledek)
-    
-    # vypsání ostatních řad a ročních průtoků do souboru (dokud budou hodnoty v seznamu vysledky)
-    while len(vysledky)>0:
-        dalsi_vysledek = vysledky.pop (0)
-        dalsi_radek = radky.pop (0)
-        zapis_vystup(dalsi_radek,dalsi_vysledek)
+        # vypisování výsledků do výstupního souboru
+
+        # odebrání hodnoty průměrného průtoku prvního roku seznamu 
+        prvni_vysledek = vysledky.pop(0)
+        # vypsání první řady seznamu a průtoku prvního roku seznamu do souboru 
+        zapis_vystup(prvni_rada,prvni_vysledek)
+        
+        # vypsání ostatních řad a ročních průtoků do souboru (dokud budou hodnoty v seznamu vysledky)
+        while len(vysledky)>0:
+            dalsi_vysledek = vysledky.pop (0)
+            dalsi_radek = radky.pop (0)
+            zapis_vystup(dalsi_radek,dalsi_vysledek)
+except PermissionError:
+    print ('K otevření souboru nejsou přístupová práva')
+    sys.exit()
 print ("Výsledné roční průtoky jsou uloženy v souboru vystup_rok.csv") 
