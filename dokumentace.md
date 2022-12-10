@@ -1,4 +1,6 @@
-# Vývojářská dokumentace 
+# Vývojářská dokumentace - Program pro výpočet průměrných sedmidenních a ročních průtoků
+Program načítá historická data o průměrných denních průtocích a vypočítává průměrné sedmidenní a roční průměry. Program je rozdělen na dvě části - v první části programu je počítán sedmidenní průměr, v druhé části souboru průměr roční.
+
 ## Funkce
 V úvodu programu jsou definovány funkce, které jsou následně používány. Funkce jsou blíže popsány níže.
 
